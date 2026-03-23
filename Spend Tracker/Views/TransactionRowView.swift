@@ -14,6 +14,7 @@ struct TransactionRowView: View {
     let color : Color
     let emoji: String
     let title: String
+    let currency: String
     let date: Date
     let amount: Double
     
@@ -35,7 +36,7 @@ struct TransactionRowView: View {
                         .foregroundStyle(.secondary)
                 }
                 Spacer()
-                Text("−\(amount, specifier: "%.0f") ₽")
+                Text("−\(amount, specifier: "%.0f") \(currency)")
                     .font(.system(size: 15, weight: .medium))
                     .foregroundStyle(Color(.pinkAccent))
             }
@@ -51,6 +52,7 @@ struct TransactionRowView: View {
         color: .amberAccent,
         emoji: Category.food.emoji,
         title: Category.food.title,
+        currency: "₽",
         date: Date.now,
         amount: 200
     )

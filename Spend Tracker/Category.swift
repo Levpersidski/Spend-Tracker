@@ -15,8 +15,10 @@ enum Category: CaseIterable {
     case transport
     case fun
     case health
+    case coffee
     case other
     
+   
     
     var title: String {
         
@@ -25,6 +27,7 @@ enum Category: CaseIterable {
         case .transport: "Транспорт"
         case .fun: "Развлечения"
         case .health: "Здоровье"
+        case .coffee: "Кофе"
         case .other: "Другое"
             
         }
@@ -38,6 +41,7 @@ enum Category: CaseIterable {
         case .transport: "🚗"
         case .fun: "🎮"
         case .health: "❤️"
+        case .coffee: "☕️"
         case .other: "📦"
 
         }
@@ -50,6 +54,7 @@ enum Category: CaseIterable {
             case .transport: .pinkAccent
             case .fun: .greenAccent
             case .health: .amberAccent
+            case .coffee: .brown
             case .other: Color(.systemGray4)
             }
         }

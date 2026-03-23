@@ -45,11 +45,14 @@ struct TransactionView: View {
                                 .font(.system(size: 15, weight: .medium))
                                 .padding(.horizontal)
                             ScrollView {
-                            ForEach(viewModel.transactions) { transaction in
+                                ForEach(
+                                    viewModel.sortedTransactions
+                                ) { transaction in
                                 TransactionRowView(
                                     color: transaction.category.color,
                                     emoji: transaction.category.emoji,
                                     title: transaction.title,
+                                    currency: transaction.currency,
                                     date: transaction.date,
                                     amount: transaction.amount
                                 )
