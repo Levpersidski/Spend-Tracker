@@ -19,13 +19,104 @@ struct Transaction: Identifiable {
     
     static func getTransactionList() -> [Transaction] {
         return [
-            Transaction( title: "Молоко", amount: 242, currency: "₽", category: .food, date: .now),
-            Transaction(title: "Хлеб", amount: 120, currency: "₽", category: .food, date: .now),
-            Transaction(title: "Такси", amount: 242, currency: "₽", category: .transport, date: .now),
-            Transaction(title: "Кардиолог", amount: 1000, currency: "₽" , category: .health, date: .now),
-            Transaction(title: "Кино", amount: 5200, currency: "₽", category: .fun, date: .now),
-            Transaction(title: "Спортзал", amount: 3000, currency: "₽", category: .other, date: .now)
+            Transaction(
+                title: "Молоко",
+                amount: 700,
+                currency: "₽",
+                category: .food,
+                date: makeDate(year: 2026, month: 3, day: 22)
+            ),
+            Transaction(
+                title: "Пятерочка",
+                amount: 1400,
+                currency: "₽",
+                category: .food,
+                date: makeDate(year: 2026, month: 3, day: 24)
+            ),
+            Transaction(
+                title: "Такси",
+                amount: 1600,
+                currency: "₽",
+                category: .transport,
+                date: makeDate(year: 2026, month: 3, day: 25)
+            ),
+            Transaction(
+                title: "Кардиолог",
+                amount: 3500,
+                currency: "₽" ,
+                category: .health,
+                date: makeDate(year: 2026, month: 3, day: 24)
+            ),
+            Transaction(
+                title: "Аквапарк",
+                amount: 10000,
+                currency: "₽",
+                category: .fun,
+                date: makeDate(year: 2026, month: 3, day: 26)
+            ),
+            Transaction(
+                title: "Кино",
+                amount: 1300,
+                currency: "₽",
+                category: .fun,
+                date: makeDate(year: 2025, month: 8, day: 23)
+            ),
+            
+            Transaction(
+                title: "Кино",
+                amount: 1300,
+                currency: "₽",
+                category: .fun,
+                date: makeDate(year: 2025, month: 8, day: 23)
+            ),
+            Transaction(
+                title: "Кино",
+                amount: 1300,
+                currency: "₽",
+                category: .fun,
+                date: makeDate(year: 2025, month: 7, day: 11)
+            ),
+            
+            Transaction(
+                title: "Кино",
+                amount: 1300,
+                currency: "₽",
+                category: .fun,
+                date: makeDate(year: 2026, month: 3, day: 2)
+            ),
+            
+            Transaction(
+                title: "Кино",
+                amount: 1300,
+                currency: "₽",
+                category: .fun,
+                date: makeDate(year: 2026, month: 3, day: 5)
+            ),
+            
+            Transaction(
+                title: "Кино",
+                amount: 1300,
+                currency: "₽",
+                category: .fun,
+                date: makeDate(year: 2026, month: 3, day: 8)
+            ),
+
+            Transaction(
+                title: "Спортзал",
+                amount: 2000,
+                currency: "₽",
+                category: .other,
+                date: makeDate(year: 2026, month: 3, day: 22)
+            )
         ]
+    }
+    
+    private static func makeDate(year: Int, month: Int, day: Int) -> Date {
+        var c = DateComponents()
+        c.year = year
+        c.month = month
+        c.day = day
+        return Calendar.current.date(from: c) ?? .now
     }
     
 }

@@ -15,7 +15,7 @@ struct Spend_TrackerApp: App {
     var body: some Scene {
     
         WindowGroup {
-            TransactionView()
+            StatisticsView()
                 .environment(viewModel)
                 
         }

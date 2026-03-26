@@ -32,18 +32,23 @@ struct TransactionView: View {
                             SpendingView()
                         }
                         .padding()
-                        .padding(.bottom, 30)
+                        .padding(.bottom, 40)
+                        
                         
                         // Белый блок с закруглёнными углами сверху
-                        VStack(alignment: .leading, spacing: 16) {
+                        VStack(alignment: .leading, spacing: 0) {
                             
                             // Категории
                             CategoryView()
                                 .padding(.horizontal)
+                                .padding(.bottom)
+                             //   .padding(.top)
+                                
                             // Транзакции
                             Text("Последние операции")
                                 .font(.system(size: 15, weight: .medium))
                                 .padding(.horizontal)
+                                .padding(.bottom,10)
                             ScrollView {
                                 ForEach(
                                     viewModel.sortedTransactions
@@ -83,5 +88,7 @@ struct TransactionView: View {
     TransactionView()
         .environment(TransactionViewModel())
 }
+
+
 
 

@@ -13,11 +13,10 @@ struct CategoryView: View {
             HStack {
                 Text("По категориям",)
                     .font(.system(size: 15, weight: .medium))
-                    .foregroundStyle(.purpleMain)
+                  //  .foregroundStyle(.b)
                 Spacer()
             }
             
-        
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 12) {
                 ForEach(Category.allCases, id: \.self) { category in
