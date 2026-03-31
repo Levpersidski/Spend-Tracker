@@ -16,6 +16,7 @@ struct SecondaryText: View {
         Text(text)
             .font(.system(size: 13))
             .foregroundStyle(.secondary)
+            .padding(.bottom, 10)
     }
 }
 
