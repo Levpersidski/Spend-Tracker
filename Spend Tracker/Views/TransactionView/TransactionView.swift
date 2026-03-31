@@ -8,78 +8,110 @@
 import SwiftUI
 
 struct TransactionView: View {
+    
     @Environment(TransactionViewModel.self) var viewModel
     
     var body: some View {
         NavigationStack {
             ZStack(alignment: .top) {
                 
-                // Фиолетовый фон сверху
+               
                 Color(.purpleMain)
                     .frame(height: 300)
                     .ignoresSafeArea()
                 
-                
-                    VStack(spacing: 0) {
+                VStack(spacing: 0) {
+                    
+                 
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Привет, Роман 👋")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundStyle(.white)
                         
-                        // Фиолетовая карточка
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Привет,Роман 👋")
-                                .font(.system(size: 20, weight: .bold))
-                                .foregroundStyle(.white)
-                         
-                            
-                            SpendingView()
-                        }
-                        .padding()
-                        .padding(.bottom, 40)
+                        SpendingView()
+                    }
+                    .padding()
+                    .padding(.bottom, 40)
+                    
+                    VStack(alignment: .leading, spacing: 0) {
+                        CategoryView()
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .padding(.horizontal)
+                            .padding(.bottom)
                         
+                        Text("Последние операции")
+                            .font(.system(size: 15, weight: .medium))
+                            .padding(.horizontal)
+                            .padding(.bottom, 10)
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 0) {
                         
-                        // Белый блок с закруглёнными углами сверху
-                        VStack(alignment: .leading, spacing: 0) {
-                            
-                            // Категории
-                            CategoryView()
-                                .padding(.horizontal)
-                                .padding(.bottom)
-                             //   .padding(.top)
+                        List {
+                            if viewModel.isCurrentMonthEmpty {
+                               
+                                HStack {
+                                    Spacer()
+                                    
+                                    Text(viewModel.emptyMonthText)
+                                        .font(.system(size: 16, weight: .medium))
+                                        .foregroundStyle(.secondary)
+                                        .padding(.vertical, 30)
+                                    
+                                    Spacer()
+                                }
+                                .listRowBackground(Color.clear)
+                                .listRowSeparator(.hidden)
                                 
-                            // Транзакции
-                            Text("Последние операции")
-                                .font(.system(size: 15, weight: .medium))
-                                .padding(.horizontal)
-                                .padding(.bottom,10)
-                            ScrollView {
-                                ForEach(
-                                    viewModel.sortedTransactions
-                                ) { transaction in
-                                TransactionRowView(
-                                    color: transaction.category.color,
-                                    emoji: transaction.category.emoji,
-                                    title: transaction.title,
-                                    currency: transaction.currency,
-                                    date: transaction.date,
-                                    amount: transaction.amount
-                                )
+                            } else {
+                                ForEach(viewModel.currentMonthTransactions) {
+                                    transaction in
+                                    
+                                    NavigationLink {
+                                        AddTransactionView(
+                                            editingTransaction: transaction
+                                        )
+                                        .environment(viewModel)
+                                    } label: {
+                                        TransactionRowView(
+                                            color: transaction.category.color,
+                                            emoji: transaction.category.emoji,
+                                            title: transaction.title,
+                                            currency: transaction.currency.rawValue,
+                                            date: transaction.date,
+                                            amount: transaction.amount
+                                        )
+                                    }
+                                    .swipeActions(edge: .trailing) {
+                                        Button(role: .destructive) {
+                                            viewModel.deleteTransaction(transaction)
+                                        } label: {
+                                            Label("Удалить", systemImage: "trash")
+                                        }
+                                    }
+                                    .listRowBackground(Color.clear)
+                                }
                             }
                         }
-                            .padding(.top, 5)
-                            .background(Color(.backgroundMain))
-                        .clipShape(RoundedRectangle(cornerRadius: 24))  // ← скругление сверху
-                        .toolbarColorScheme(.dark, for: .navigationBar)
-                        .toolbar {
-                            ToolbarItem(placement: .topBarTrailing) {
-                                NavigationLink {
-                                    AddTransactionView()
-                                } label: {
-                                    Text("Добавить +")
-                                } 
-                            }
-                        }
+                        .listStyle(.plain)
+                        .scrollContentBackground(.hidden)
+                        .frame(minHeight: 260)
+                    }
+                    .background(Color(.backgroundMain))
+                    .clipShape(RoundedRectangle(cornerRadius: 24))
+                }
+            }
+            .toolbarColorScheme(.dark, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        AddTransactionView()
+                            .environment(viewModel)
+                    } label: {
+                        Text("Добавить +")
                     }
                 }
             }
-          
         }
     }
 }
@@ -87,8 +119,5 @@ struct TransactionView: View {
 #Preview {
     TransactionView()
         .environment(TransactionViewModel())
+        .environment(SettingsViewViewModel())
 }
-
-
-
-

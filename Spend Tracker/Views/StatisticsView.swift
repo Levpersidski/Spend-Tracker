@@ -35,7 +35,7 @@ struct StatisticsView: View {
                     HStack {
                         Text("Статистикa")
                             .foregroundStyle(.white)
-                            .font(.system(size: 30, weight: .semibold))
+                            .font(.system(size: 25, weight: .semibold))
                         
                         Spacer()
                         
@@ -53,7 +53,7 @@ struct StatisticsView: View {
             }
             
             
-            VStack() {
+            VStack {
                 
                 HStack(spacing:20) {
                     
@@ -114,18 +114,19 @@ struct StatisticsView: View {
                     color: transaction.category.color,
                     emoji: transaction.category.emoji,
                     title: transaction.title,
-                    currency: transaction.currency,
+                    currency: transaction.currency.rawValue,
                     date: transaction.date,
                     amount: transaction.amount
                 )
+                    Divider()
+                    
             }
         }
-            .padding(.top, 5)
+            .padding()
             .background(Color(.backgroundMain))
         .clipShape(RoundedRectangle(cornerRadius: 24))
         }
-        Spacer()
-            
+       
     }
     
 }

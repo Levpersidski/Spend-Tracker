@@ -8,17 +8,46 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State private var selectedTab = 0
+    
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        TabView(selection: $selectedTab) {
+            
+            TransactionView()
+                .tabItem {
+                    Image("homeTabIcon")
+                    Text("Главная")
+                }
+                .tag(0)
+            
+            AddTransactionView(selectedTab: $selectedTab)
+                .tabItem {
+                    Image("plusPurple")
+                    Text("Добавить")
+                }
+                .tag(1)
+            
+            StatisticsView()
+                .tabItem {
+                    Image("staticsChart")
+                    Text("Статистика")
+                }
+                .tag(2)
+            
+            SettingsView()
+                .tabItem {
+                    Image("colorGear")
+                    Text("Настройки")
+                }
+                .tag(3)
         }
-        .padding()
     }
 }
 
 #Preview {
     ContentView()
+        .environment(TransactionViewModel())
+        .environment(SettingsViewViewModel())
 }

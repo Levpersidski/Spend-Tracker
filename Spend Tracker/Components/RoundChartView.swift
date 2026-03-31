@@ -10,8 +10,8 @@ import Charts
 
 struct RoundChartView: View {
     
-    let data: [(category: Category, total: Double, percent: Double)]
-    let totalExpenses: Double
+    let data: [(category: Category, total: Int, percent: Double)]
+    let totalExpenses: Int
     
     var body: some View {
         
@@ -29,7 +29,7 @@ struct RoundChartView: View {
                 
             
             
-            Text("\(totalExpenses / 1000, specifier: "%.1f")k\nвсего")
+            Text("\(Double(totalExpenses) / 1000, specifier: "%.1f")k\nвсего")
                 .multilineTextAlignment(.center)
         }
     }
@@ -37,8 +37,8 @@ struct RoundChartView: View {
 
 #Preview {
     RoundChartView(
-        data: [(category: Category.coffee, total: 345, percent: 32),
-               (category: Category.fun, total: 546, percent: 32),
+        data: [(category: Category.food, total: 345, percent: 32),
+               (category: Category.entertainment, total: 546, percent: 32),
                (category: Category.food, total: 345, percent: 32)
               ],
         totalExpenses: 3234

@@ -9,35 +9,40 @@ import SwiftUI
 
 struct AddTransactionView: View {
     
-    @Environment(TransactionViewModel.self) var viewModel
+    @Environment(TransactionViewModel.self) var transactionVM
+    
+    @State private var viewModel: AddTransactionViewModel
     
     @Environment(\.dismiss) var dismiss
+    var selectedTab: Binding<Int>? = nil
     
-    @State private var selectedCurrency = "₽"
-    @State private var transactionName = ""
-    @State private var amount = ""
-    @State private var selectedCategory = Category.food
-    @State private var date = Date.now
-    @State private var showDatePicker = false
+    init(editingTransaction: Transaction? = nil, selectedTab: Binding<Int>? = nil) {
+            _viewModel = State(initialValue: AddTransactionViewModel(editingTransaction: editingTransaction))
+            self.selectedTab = selectedTab
+        }
     
     var body: some View {
         NavigationStack {
             VStack(alignment:.leading) {
                 SecondaryText(text: "Название")
-                CustomTextField(placeholder: "Вкусвилл", text: $transactionName)
+                CustomTextField(
+                    placeholder: "Вкусвилл",
+                    text: $viewModel.transactionName
+                )
                 
                 SecondaryText(text: "Сумма")
                     .padding(.top)
                 
                 HStack {
                     
-                        Menu {
-                            Button("₽ Рубль") {selectedCurrency = "₽"}
-                            Button("$ Доллар") {selectedCurrency = "$"}
-                            Button("€ Евро") {selectedCurrency = "€"}
-                            
+                    Menu {
+                        ForEach(Currency.allCases, id: \.self) { currency in 
+                            Button(currency.title) {
+                                
+                                viewModel.selectedCurrency = currency}
+                        }
                         } label: {
-                            Text(selectedCurrency)
+                            Text(viewModel.selectedCurrency.rawValue)
                                 
                                 .frame(width: 35, height: 40)
                                 .font(.system(.headline, weight:.bold))
@@ -48,7 +53,7 @@ struct AddTransactionView: View {
                         
                     
                    
-                    CustomTextField(placeholder: "Сумма", text: $amount)
+                    CustomTextField(placeholder: "Сумма", text: $viewModel.amount)
                         .keyboardType(.decimalPad)
                 }
                 SecondaryText(text: "Категория")
@@ -65,34 +70,29 @@ struct AddTransactionView: View {
                             .frame(maxWidth: .infinity)
                             .padding()
                             .background(
-                                selectedCategory == category ? Color.purpleMain : category.color.opacity(0.1)
+                                viewModel.selectedCategory == category ? Color.purpleMain : category.color.opacity(0.1)
                             )
-                            .foregroundStyle(selectedCategory == category ? .white : category.color)
+                            .foregroundStyle(viewModel.selectedCategory == category ? .white : category.color)
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                             .onTapGesture {
-                                selectedCategory = category
+                                viewModel.selectedCategory = category
                             }
                         }
                     }
+                
                 SecondaryText(text: "Дата")
                     .padding(.top)
                 
-                CustomDatePicker(date: $date)
+                CustomDatePicker(date: $viewModel.date)
                 
                 HStack {
                     
                     Button{
-                        viewModel.addTransaction(
-                            title: transactionName,
-                            amount: Double(amount) ?? 0.0,
-                            currency: selectedCurrency,
-                            category: selectedCategory,
-                            date: date
-                        )
-                        dismiss()
-                        
+                        viewModel.save(transactionViewModel: transactionVM)
+                        navigateBack() 
                     } label: {
                         Text("Сохранить")
+                            .font(.system(size: 20))
                             .frame(maxWidth: .infinity)
                             .frame(height: 40)
                             .background(Color.purpleMain)
@@ -100,7 +100,9 @@ struct AddTransactionView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 12))
                     }
                 }
+                .disabled(!viewModel.isFormValid)
                 .padding(.top)
+                    
                     
             }
             .padding()
@@ -109,16 +111,24 @@ struct AddTransactionView: View {
             
                     .toolbarBackground(Color(.purpleMain), for: .navigationBar)
                     .toolbarBackground(.visible, for: .navigationBar)
-                    .navigationTitle("Новый расход")
+                    .onAppear {
+                        viewModel.resetIfNeeded()
+                    }
+                    .navigationTitle(viewModel.navigationTitle)
                     .navigationBarTitleDisplayMode(.inline)
                     .toolbarColorScheme(.dark, for: .navigationBar)
             }
             
         }
-    
+    private func navigateBack() {
+           if let selectedTab {
+               selectedTab.wrappedValue = 0
+           } else {
+               dismiss()
+           }
+       }
     
     }
-
 
 #Preview {
     AddTransactionView()

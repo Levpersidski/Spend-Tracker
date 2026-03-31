@@ -11,13 +11,14 @@ import SwiftUI
 struct Spend_TrackerApp: App {
     
     @State private var viewModel = TransactionViewModel()
+    @State private var settingsViewModel = SettingsViewViewModel() 
     
     var body: some Scene {
     
         WindowGroup {
-            StatisticsView()
+            ContentView()
                 .environment(viewModel)
-                
+                .environment(settingsViewModel)
         }
     }
 }
