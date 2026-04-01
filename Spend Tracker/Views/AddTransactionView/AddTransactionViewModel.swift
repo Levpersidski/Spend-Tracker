@@ -17,12 +17,17 @@ import Foundation
     var selectedCategory = Category.food
     var date = Date.now
     
+    var showSuccess: Bool = false
     // Режим — новая или редактирование
     private let editingTransaction: Transaction?
     
     var navigationTitle: String {
         editingTransaction == nil ? "Новый расход" : "Редактировать"
     }
+    
+    var isEditing: Bool {
+            editingTransaction != nil
+        }
     
     var isFormValid: Bool {
         let trimmedTitle = transactionName.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -58,6 +63,7 @@ import Foundation
                 date: dateWithCurrentTime(date)
             )
         }
+        showSuccess = true
     }
     
     // MARK: - Private

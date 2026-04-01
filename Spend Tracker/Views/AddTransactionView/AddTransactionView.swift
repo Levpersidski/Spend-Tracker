@@ -18,9 +18,9 @@ struct AddTransactionView: View {
     @Environment(\.dismiss) var dismiss
     
     @State private var viewModel: AddTransactionViewModel
-    
     @FocusState private var focusedField: Field?
-    
+    @State private var animateSuccess = false
+
     var selectedTab: Binding<Int>? = nil
     
     
@@ -107,14 +107,12 @@ struct AddTransactionView: View {
                 
                 CustomDatePicker(date: $viewModel.date)
                     .onTapGesture {
-                        // ДОБАВИЛ: перед открытием date picker убираем клавиатуру
                         focusedField = nil
                     }
                 
                 Button {
                     focusedField = nil
                     viewModel.save(transactionViewModel: transactionVM)
-                    navigateBack()
                 } label: {
                     Text("Сохранить")
                         .font(.system(size: 20))
@@ -151,16 +149,63 @@ struct AddTransactionView: View {
                 }
             }
         }
+        .overlay {
+                if viewModel.showSuccess {
+                    successOverlay
+                        .onAppear {
+                            withAnimation(.spring()) {
+                                animateSuccess = true
+                            }
+                            // через 1.5 секунды закрываем
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                navigateBack()
+                            }
+                        }
+                }
+            }
+        
+    }
+    
+    
+    private var successOverlay: some View {
+        ZStack {
+            Color.black.opacity(0.4)
+                .ignoresSafeArea()
+            
+            VStack(spacing: 20) {
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 80))
+                    .foregroundStyle(.green)
+                
+                Text(
+                    viewModel.isEditing ? "Трата добавлена!" : "Трата обновлена!"
+                )
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundStyle(.white)
+            }
+            .padding(30)
+            .background(
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(Color(.systemBackground).opacity(0.8))
+            )
+            .scaleEffect(animateSuccess ? 1.0 : 0.5)
+            .opacity(animateSuccess ? 1.0 : 0)
+            .animation(.spring(), value: animateSuccess)
+        }
     }
     
     private func navigateBack() {
-        if let selectedTab {
-            selectedTab.wrappedValue = 0
-        } else {
-            dismiss()
-        }
-    }
-}
+           if let selectedTab {
+               selectedTab.wrappedValue = 0
+           } else {
+               dismiss()
+           }
+       }
+    
+   }
+    
+   
 
 #Preview {
     NavigationStack {
