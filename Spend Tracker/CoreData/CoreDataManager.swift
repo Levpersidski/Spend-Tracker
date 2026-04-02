@@ -27,13 +27,10 @@ final class CoreDataManager {
         container.viewContext
     }
     
-    func save() {
+    func save() throws {
         guard context.hasChanges else { return }
-        do {
-            try context.save()
-        } catch {
-            print("Ошибка сохранения: \(error)")
-        }
+        try context.save()
+        
     }
 }
 

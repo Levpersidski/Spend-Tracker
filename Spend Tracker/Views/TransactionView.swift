@@ -12,6 +12,9 @@ struct TransactionView: View {
     @Environment(TransactionViewModel.self) var viewModel
     
     var body: some View {
+        
+        @Bindable var viewModel = viewModel 
+        
         NavigationStack {
             ZStack(alignment: .top) {
                 
@@ -112,6 +115,7 @@ struct TransactionView: View {
                     }
                 }
             }
+            .errorAlert(message: $viewModel.errorMessage)
         }
     }
 }

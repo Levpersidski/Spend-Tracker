@@ -13,6 +13,8 @@ class TransactionViewModel {
     
     var transactions: [Transaction] = []
     
+    var errorMessage: String?
+    
     private let repository: TransactionRepositoryProtocol
     
     var topCategoriesThisMonth: [Category] {
@@ -35,8 +37,13 @@ class TransactionViewModel {
         loadTransactions()
     }
     
+    // MARK: - CRUD
+    
     func loadTransactions() {
-        transactions = repository.fetchAll()
+        perform {
+            transactions = try repository.fetchAll() 
+        }
+        
     }
     
     func addTransaction(title: String, amount: Int, currency: Currency, category: Category, date: Date) {
@@ -48,24 +55,36 @@ class TransactionViewModel {
             category: category,
             date: date
         )
-        repository.add(transaction)
-        loadTransactions()
+        perform {
+           try repository.add(transaction)
+            loadTransactions()
+        }
     }
     
     func updateTransaction(_ transaction: Transaction) {
-        repository.update(transaction)
-        loadTransactions()
+        
+        perform {
+           try repository.update(transaction)
+            loadTransactions()
+        }
     }
     
     func deleteTransaction(_ transaction: Transaction) {
-        repository.delete(transaction)
-        loadTransactions()
+        
+        perform {
+          try  repository.delete(transaction)
+            loadTransactions()
+        }
     }
     
     func deleteAll() {
-        repository.deleteAll()
-        loadTransactions()
+        perform {
+           try repository.deleteAll()
+            loadTransactions()
+        }
     }
+    
+    // MARK: - Transaction Statistics
     
     func totalExpenses(for period: Period) -> Int {
         transactionsByPeriod(period).reduce(0) { $0 + $1.amount }
@@ -141,6 +160,16 @@ class TransactionViewModel {
             return transactions
                 .filter { yearInterval.contains($0.date) }
                 .sorted { $0.date > $1.date }
+        }
+    }
+    
+    private func perform(_ action: () throws -> Void) {
+        do {
+            try action()
+        } catch let error as AppError {
+            errorMessage = error.errorDescription
+        } catch {
+            errorMessage = AppError.unknown(error).errorDescription
         }
     }
 }

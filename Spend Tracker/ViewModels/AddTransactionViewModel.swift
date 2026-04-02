@@ -99,6 +99,7 @@ import Foundation
         selectedCurrency = .ruble
         selectedCategory = .food
         date = Date.now
+        showSuccess = false
     }
     
     private func combineDateWithCurrentTime(_ date: Date) -> Date {

@@ -29,6 +29,7 @@ struct AddTransactionView: View {
     }
     
     var body: some View {
+        @Bindable var transactionVM = transactionVM 
         
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
@@ -134,6 +135,7 @@ struct AddTransactionView: View {
         .toolbarBackground(.visible, for: .navigationBar)
         .onAppear {
             viewModel.resetIfNeeded()
+            animateSuccess = false
         }
         .navigationTitle(viewModel.navigationTitle)
         .navigationBarTitleDisplayMode(.inline)
@@ -155,8 +157,9 @@ struct AddTransactionView: View {
                 )
             }
         }
-        
+        .errorAlert(message: $transactionVM.errorMessage)
     }
+        
     
     private func navigateBack() {
         if let selectedTab {
