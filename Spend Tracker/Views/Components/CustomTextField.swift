@@ -10,7 +10,9 @@ import SwiftUI
 struct CustomTextField: View {
     
     let placeholder : String
+    
     @Binding var text: String
+    
     var body: some View {
         
         TextField(placeholder, text: $text )
@@ -19,7 +21,7 @@ struct CustomTextField: View {
             .background(Color.purpleMain.opacity(0.1))
             .clipShape(RoundedRectangle(cornerRadius: 10))
     }
-    }
+}
 
 
 #Preview {

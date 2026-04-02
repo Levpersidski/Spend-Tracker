@@ -1,5 +1,5 @@
 //
-//  LimitSheetViewViewModel.swift
+//  LimitSheetViewModel.swift
 //  Spend Tracker
 //
 //  Created by SWIFT on 29.03.2026.
@@ -16,23 +16,28 @@ import Observation
     
     private var lastValidValue: Int = 0
     
-    var isSaveDisabled: Bool {
-        limitText.trimmingCharacters(in: .whitespaces).isEmpty
+    var canSave: Bool {
+        !limitText.trimmingCharacters(in: .whitespaces).isEmpty
     }
+    
+    var parsedValue: Int {
+        lastValidValue
+    }
+
     
     func setup(initialValue: Int) {
            lastValidValue = initialValue
            limitText = String(initialValue)
        }
     
-    func validated() -> Int? {
+    func validate() -> Bool {
         guard let value = Int(limitText.trimmingCharacters(in: .whitespaces)), value > 0 else {
                 alertMessage = "Введите корректное целое число"
                 showAlert = true
             limitText = String(lastValidValue)  // ← восстанавливаем поле
-                return nil
+            return false
             }
         lastValidValue = value
-            return value
+        return true
         }
     }

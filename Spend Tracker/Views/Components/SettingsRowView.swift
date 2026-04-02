@@ -13,35 +13,35 @@ struct SettingsRowView<TrailingContent: View>: View {
     let title: String
     var subtitle: String? = nil 
     @ViewBuilder let trailingContent: () -> TrailingContent 
-
-
+    
+    
     var body: some View {
         HStack(spacing: 14) {
             ZStack {
                 RoundedRectangle(cornerRadius: 14)
                     .fill(Color(.systemGray6))
                     .frame(width: 52, height: 52)
-
+                
                 Image(systemName: icon)
                     .font(.system(size: 30))
                     .foregroundStyle(iconColor)
             }
-
+            
             VStack(alignment: .leading, spacing: 3) {
-                            Text(title)
-                                .font(.system(size: 20, weight: .medium))
-                                .opacity(0.7)
-                                .foregroundStyle(.primary)
-
-                            if let subtitle {
-                                Text(subtitle)
-                                    .font(.system(size: 12))
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
-
+                Text(title)
+                    .font(.system(size: 20, weight: .medium))
+                    .opacity(0.7)
+                    .foregroundStyle(.primary)
+                
+                if let subtitle {
+                    Text(subtitle)
+                        .font(.system(size: 12))
+                        .foregroundStyle(.secondary)
+                }
+            }
+            
             Spacer()
-
+            
             trailingContent()
         }
         .padding(.horizontal, 16)
@@ -60,7 +60,7 @@ struct SettingsRowView<TrailingContent: View>: View {
         HStack(spacing: 6) {
             Text("₽ 40 000")
                 .foregroundStyle(.secondary)
-
+            
             Image(systemName: "chevron.right")
                 .foregroundStyle(.tertiary)
         }

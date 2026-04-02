@@ -10,27 +10,12 @@ import SwiftUI
 struct SpendingView: View {
     
     @Environment(TransactionViewModel.self) var transactionViewModel
-    @Environment(SettingsViewViewModel.self) var settingsViewModel
-    
-    private var currentMonthName: String {
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ru_RU")
-        formatter.dateFormat = "LLLL"
-        return formatter.string(from: .now)
-    }
+    @Environment(SettingsViewModel.self) var settingsViewModel
     
     private var monthlyExpenses: Int {
-        let calendar = Calendar.current
-        
-        guard let monthInterval = calendar.dateInterval(of: .month, for: .now) else {
-            return 0
-        }
-        
-        return transactionViewModel.transactions
-            .filter { monthInterval.contains($0.date) }
-            .reduce(0) { $0 + $1.amount }
+        transactionViewModel.totalExpenses(for: .month)
     }
-    
+        
     private var monthlyLimit: Int {
         settingsViewModel.monthlyLimit
     }
@@ -46,6 +31,17 @@ struct SpendingView: View {
     
     private var progressColor: Color {
         progress >= 1.0 ? .red : .yellow
+    }
+    
+    private static let monthFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ru_RU")
+        formatter.dateFormat = "LLLL"
+        return formatter
+    }()
+    
+    private var currentMonthName: String {
+        Self.monthFormatter.string(from: .now)
     }
     
     var body: some View {
@@ -77,5 +73,5 @@ struct SpendingView: View {
 #Preview {
     SpendingView()
         .environment(TransactionViewModel())
-        .environment(SettingsViewViewModel())
+        .environment(SettingsViewModel())
 }

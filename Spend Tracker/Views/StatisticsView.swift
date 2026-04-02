@@ -8,19 +8,15 @@
 import SwiftUI
 import Charts
 
-enum Period: String, CaseIterable {
-    case weak = "Неделя"
-    case month = "Месяц"
-    case year = "Год"
-    
-}
-
 struct StatisticsView: View {
     @Environment(TransactionViewModel.self) var viewModel
+    @Environment(SettingsViewModel.self) var settingsViewModel
     
     @State private var selectablePeriod = Period.month
     
-    init() { pickerConfig() }
+    private var dailyWarningThreshold: Int {
+        settingsViewModel.monthlyLimit / 30
+    }
     
     var body: some View {
         
@@ -52,9 +48,7 @@ struct StatisticsView: View {
                 .padding(.horizontal)
             }
             
-            
             VStack {
-                
                 HStack(spacing:20) {
                     
                     RoundChartView(
@@ -91,7 +85,9 @@ struct StatisticsView: View {
                     x: .value("День", day.weekDay),
                     y: .value("Сумма", day.total)
                 )
-                .foregroundStyle(day.total < 2000 ? .lightPurple : .purpleMain)
+                .foregroundStyle(
+                    day.total >= dailyWarningThreshold ? .lightPurple : .purpleMain
+                )
                 .cornerRadius(8)
             }
             
@@ -119,21 +115,22 @@ struct StatisticsView: View {
                     amount: transaction.amount
                 )
                     Divider()
-                    
             }
         }
             .padding()
             .background(Color(.backgroundMain))
         .clipShape(RoundedRectangle(cornerRadius: 24))
         }
-       
+        .onAppear{ configureSegmentedControl() }
     }
     
 }
 
+// MARK: - Private
+
 private extension StatisticsView {
     
-    func pickerConfig() {
+    func configureSegmentedControl() {
         UISegmentedControl.appearance().selectedSegmentTintColor = .white
         UISegmentedControl.appearance().setTitleTextAttributes(
             [.foregroundColor: UIColor(Color.purpleMain)], for: .selected
@@ -149,4 +146,5 @@ private extension StatisticsView {
 #Preview {
     StatisticsView()
         .environment(TransactionViewModel())
+        .environment(SettingsViewModel())
 }

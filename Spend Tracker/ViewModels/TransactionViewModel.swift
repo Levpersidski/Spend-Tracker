@@ -12,35 +12,26 @@ import Observation
 class TransactionViewModel {
     
     var transactions: [Transaction] = []
-    private let repository = TransactionRepository()
+    
+    private let repository: TransactionRepositoryProtocol
+    
+    var topCategoriesThisMonth: [Category] {
+        Category.allCases.sorted { first, second in
+            totalAmountForCurrentMonth(for: first) > totalAmountForCurrentMonth(for: second)
+        }
+    }
     
     var currentMonthTransactions: [Transaction] {
-        let calendar = Calendar.current
-        
-        guard let monthInterval = calendar.dateInterval(of: .month, for: .now) else {
-            return []
-        }
-        
-        return transactions
-            .filter { monthInterval.contains($0.date) }
-            .sorted { $0.date > $1.date }
+        transactionsByPeriod(.month)
     }
     
     var isCurrentMonthEmpty: Bool {
         currentMonthTransactions.isEmpty
     }
     
-    var emptyMonthText: String {
-        "В этом месяце нет трат"
-    }
     
-    var sortedCategoriesByCurrentMonthAmount: [Category] {
-        Category.allCases.sorted { first, second in
-            totalAmountForCurrentMonth(for: first) > totalAmountForCurrentMonth(for: second)
-        }
-    }
-    
-    init() {
+    init(repository: TransactionRepositoryProtocol = TransactionRepository()) {
+        self.repository = repository
         loadTransactions()
     }
     
@@ -121,18 +112,22 @@ class TransactionViewModel {
         }
     }
     
-    func transactionsByPeriod(_ period: Period) -> [Transaction] {
+    func transactionsByPeriod(_ period: Period, referenceDate: Date = .now) -> [Transaction]  {
         let calendar = Calendar.current
         
         switch period {
-        case .weak:
-            let cutoffDate = calendar.date(byAdding: .day, value: -7, to: .now) ?? .now
+        case .week:
+            let cutoffDate = calendar.date(
+                byAdding: .day,
+                value: -7,
+                to: referenceDate
+            ) ?? .now
             return transactions
                 .filter { $0.date >= cutoffDate }
                 .sorted { $0.date > $1.date }
             
         case .month:
-            guard let monthInterval = calendar.dateInterval(of: .month, for: .now) else {
+            guard let monthInterval = calendar.dateInterval(of: .month, for: referenceDate) else {
                 return []
             }
             return transactions
@@ -140,7 +135,7 @@ class TransactionViewModel {
                 .sorted { $0.date > $1.date }
             
         case .year:
-            guard let yearInterval = calendar.dateInterval(of: .year, for: .now) else {
+            guard let yearInterval = calendar.dateInterval(of: .year, for: referenceDate) else {
                 return []
             }
             return transactions

@@ -22,12 +22,14 @@ struct ContentView: View {
                 }
                 .tag(0)
             
-            AddTransactionView(selectedTab: $selectedTab)
-                .tabItem {
-                    Image("plusPurple")
-                    Text("Добавить")
-                }
-                .tag(1)
+            NavigationStack {
+                AddTransactionView(selectedTab: $selectedTab)
+            }
+            .tabItem {
+                Image("plusPurple")
+                Text("Добавить")
+            }
+            .tag(1)
             
             StatisticsView()
                 .tabItem {
@@ -49,5 +51,5 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .environment(TransactionViewModel())
-        .environment(SettingsViewViewModel())
+        .environment(SettingsViewModel())
 }

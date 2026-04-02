@@ -11,7 +11,7 @@ import SwiftUI
 struct Spend_TrackerApp: App {
     
     @State private var viewModel = TransactionViewModel()
-    @State private var settingsViewModel = SettingsViewViewModel() 
+    @State private var settingsViewModel = SettingsViewModel() 
     
     var body: some Scene {
     

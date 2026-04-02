@@ -37,12 +37,3 @@ final class CoreDataManager {
     }
 }
 
-
-/*
- static let shared — singleton, один экземпляр на всё приложение. Используем везде через CoreDataManager.shared.
- 
- NSPersistentContainer — главный объект Core Data. Соединяет .xcdatamodeld схему с реальным файлом БД на диске устройства. "SpendTracker" — имя твоего .xcdatamodeld файла.
- context — это "рабочий стол" для операций с БД. Через него читаем, пишем, удаляем объекты. Изменения в context живут в памяти пока не вызовешь save().
- save() — только тогда данные физически записываются на диск.
-
- */

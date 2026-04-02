@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct Transaction: Identifiable {
+struct Transaction: Identifiable, Equatable {
     let id: UUID
     let title: String
     let amount: Int
@@ -16,6 +16,9 @@ struct Transaction: Identifiable {
     let category: Category
     let date: Date
     
+    static func == (lhs: Transaction, rhs: Transaction) -> Bool {
+        lhs.id == rhs.id
+    }
     
     static var preview: Transaction {
         Transaction(
@@ -27,15 +30,6 @@ struct Transaction: Identifiable {
             date: .now
         )
     }
-    
-    private static func makeDate(year: Int, month: Int, day: Int) -> Date {
-        var c = DateComponents()
-        c.year = year
-        c.month = month
-        c.day = day
-        return Calendar.current.date(from: c) ?? .now
-    }
-    
 }
 
 

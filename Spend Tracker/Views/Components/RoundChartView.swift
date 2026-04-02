@@ -15,18 +15,17 @@ struct RoundChartView: View {
     
     var body: some View {
         
-       
         ZStack {
             Chart(data, id: \.category) { item in
-                    SectorMark(
-                        angle: .value("Amount", item.total),
-                        innerRadius: .ratio(0.65),
-                        angularInset: 1
-                    )
-                    .foregroundStyle(item.category.color)
-                    .cornerRadius(5)
-                }
-                
+                SectorMark(
+                    angle: .value("Amount", item.total),
+                    innerRadius: .ratio(0.65),
+                    angularInset: 1
+                )
+                .foregroundStyle(item.category.color)
+                .cornerRadius(5)
+            }
+            
             
             
             Text("\(Double(totalExpenses) / 1000, specifier: "%.1f")k\nвсего")

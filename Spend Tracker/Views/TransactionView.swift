@@ -24,7 +24,7 @@ struct TransactionView: View {
                     
                  
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Привет, Роман 👋")
+                        Text("Мои расходы 💸")
                             .font(.system(size: 20, weight: .bold))
                             .foregroundStyle(.white)
                         
@@ -53,7 +53,7 @@ struct TransactionView: View {
                                 HStack {
                                     Spacer()
                                     
-                                    Text(viewModel.emptyMonthText)
+                                    Text("В этом месяце нет трат")
                                         .font(.system(size: 16, weight: .medium))
                                         .foregroundStyle(.secondary)
                                         .padding(.vertical, 30)
@@ -119,5 +119,5 @@ struct TransactionView: View {
 #Preview {
     TransactionView()
         .environment(TransactionViewModel())
-        .environment(SettingsViewViewModel())
+        .environment(SettingsViewModel())
 }

@@ -7,9 +7,9 @@
 
 
 
+import Foundation 
 
-
-enum Currency: String, CaseIterable {
+enum Currency: String, CaseIterable, Codable {
     case ruble = "₽"
     case dollar = "$"
     case euro = "€"
@@ -19,14 +19,6 @@ enum Currency: String, CaseIterable {
         case .ruble: return "Рубль"
         case .dollar: return "Доллар"
         case .euro: return "Евро"
-        }
-    }
-    
-    var code: String {
-        switch self {
-        case .ruble: return "RUB"
-        case .dollar: return "USD"
-        case .euro: return "EUR"
         }
     }
 }

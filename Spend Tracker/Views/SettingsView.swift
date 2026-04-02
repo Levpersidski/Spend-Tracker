@@ -10,7 +10,7 @@ import SwiftUI
 struct SettingsView: View {
     
     @Environment(TransactionViewModel.self) var transactionViewModel
-       @State private var viewModel = SettingsViewViewModel()
+       @State private var viewModel = SettingsViewModel()
        @State private var showDeleteAlert = false  //
     
     var body: some View {
@@ -70,7 +70,7 @@ struct SettingsView: View {
                     SecondaryTitleView(text: "ДАННЫЕ")
                     
                     Button {
-                      //  TODO
+                        viewModel.exportCSV(transactions: transactionViewModel.transactions)
                     } label: { 
                     SettingsRowView(
                         icon: "square.and.arrow.up",
@@ -139,6 +139,11 @@ struct SettingsView: View {
             )
             .presentationDetents([.height(260)])
             .presentationDragIndicator(.visible)
+        }
+        .sheet(isPresented: $viewModel.showShareSheet) {
+            if let url = viewModel.cSVFileURL {
+                ShareSheet(items: [url])
+            }
         }
     }
     

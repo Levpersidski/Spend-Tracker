@@ -18,7 +18,7 @@ import Foundation
     var date = Date.now
     
     var showSuccess: Bool = false
-    // Режим — новая или редактирование
+    
     private let editingTransaction: Transaction?
     
     var navigationTitle: String {
@@ -28,6 +28,10 @@ import Foundation
     var isEditing: Bool {
             editingTransaction != nil
         }
+    
+    var successMessage: String {
+        isEditing ? "Трата обновлена!" : "Трата добавлена!"
+    }
     
     var isFormValid: Bool {
         let trimmedTitle = transactionName.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -43,11 +47,15 @@ import Foundation
     // MARK: - Actions
     
     func save(transactionViewModel: TransactionViewModel) {
+        
+        guard let parsedAmount = Int(amount.trimmingCharacters(in: .whitespacesAndNewlines)),
+              parsedAmount > 0 else { return }
+        
         if let existing = editingTransaction {
             let updated = Transaction(
                 id: existing.id,
-                title: transactionName,
-                amount: Int(amount) ?? 0,
+                title: transactionName.trimmingCharacters(in: .whitespacesAndNewlines),
+                amount: parsedAmount,
                 currency: selectedCurrency,
                 category: selectedCategory,
                 date: date
@@ -56,11 +64,11 @@ import Foundation
             
         } else {
             transactionViewModel.addTransaction(
-                title: transactionName,
-                amount: Int(amount) ?? 0,
+                title: transactionName.trimmingCharacters(in: .whitespacesAndNewlines),
+                amount: parsedAmount,
                 currency: selectedCurrency,
                 category: selectedCategory,
-                date: dateWithCurrentTime(date)
+                date: combineDateWithCurrentTime(date)
             )
         }
         showSuccess = true
@@ -93,7 +101,7 @@ import Foundation
         date = Date.now
     }
     
-    private func dateWithCurrentTime(_ date: Date) -> Date {
+    private func combineDateWithCurrentTime(_ date: Date) -> Date {
         let calendar = Calendar.current
         let timeComponents = calendar.dateComponents([.hour, .minute, .second], from: Date.now)
         var dateComponents = calendar.dateComponents([.year, .month, .day], from: date)

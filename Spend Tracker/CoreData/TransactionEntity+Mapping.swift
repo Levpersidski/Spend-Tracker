@@ -19,8 +19,8 @@ extension TransactionEntity {
             date: date
         )
     }
-    
-    static func toEntity(_ transaction: Transaction, context: NSManagedObjectContext) {
+    @discardableResult 
+    static func insert(from transaction: Transaction, into context: NSManagedObjectContext) -> TransactionEntity {
         let entity = TransactionEntity(context: context)
         entity.id = transaction.id
         entity.title = transaction.title
@@ -28,6 +28,6 @@ extension TransactionEntity {
         entity.currency = transaction.currency.rawValue
         entity.category = transaction.category.rawValue
         entity.date = transaction.date
-        
+        return entity
     }
 }

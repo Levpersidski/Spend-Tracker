@@ -21,7 +21,7 @@ struct CategoryView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
                     ForEach(
-                        viewModel.sortedCategoriesByCurrentMonthAmount,
+                        viewModel.topCategoriesThisMonth,
                         id: \.self
                     ) { category in
                         let total = viewModel.totalAmountForCurrentMonth(for: category)
@@ -42,7 +42,7 @@ struct CategoryView: View {
                         .frame(width: 85, height: 85)
                         .background(category.color.opacity(isEmpty ? 0.1 : 0.2))
                         .clipShape(RoundedRectangle(cornerRadius: 12))
-                      .opacity(isEmpty ? 0.4 : 1.0)
+                        .opacity(isEmpty ? 0.4 : 1.0)
                     }
                 }
             }

@@ -11,7 +11,6 @@ struct LimitSheetView: View {
     
     @State private var viewModel = LimitSheetViewModel()
     
-    
     let initialValue: Int
     let onSave: (Int) -> Void
     let onCancel: () -> Void
@@ -34,18 +33,19 @@ struct LimitSheetView: View {
                     .background(Color(.systemGray5))
                     .foregroundStyle(.black)
                     .clipShape(RoundedRectangle(cornerRadius: 14))
-                    .disabled(viewModel.isSaveDisabled)
+                
                 
                 Button("Сохранить") {
-                    if let value = viewModel.validated() {
-                        onSave(value)
+                    if viewModel.validate() {
+                        onSave(viewModel.parsedValue)
                     }
-                    }
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 50)
-                    .background(Color.purple)
-                    .foregroundStyle(.white)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                }
+                .frame(maxWidth: .infinity)
+                .frame(height: 50)
+                .background(Color.purple)
+                .foregroundStyle(.white)
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .disabled(viewModel.canSave)
             }
             
             Spacer()

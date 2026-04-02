@@ -20,10 +20,8 @@ struct AddTransactionView: View {
     @State private var viewModel: AddTransactionViewModel
     @FocusState private var focusedField: Field?
     @State private var animateSuccess = false
-
+    
     var selectedTab: Binding<Int>? = nil
-    
-    
     
     init(editingTransaction: Transaction? = nil, selectedTab: Binding<Int>? = nil) {
         _viewModel = State(initialValue: AddTransactionViewModel(editingTransaction: editingTransaction))
@@ -95,7 +93,6 @@ struct AddTransactionView: View {
                         )
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                         .onTapGesture {
-                            // ДОБАВИЛ: при выборе категории убираем клавиатуру
                             focusedField = nil
                             viewModel.selectedCategory = category
                         }
@@ -150,62 +147,28 @@ struct AddTransactionView: View {
             }
         }
         .overlay {
-                if viewModel.showSuccess {
-                    successOverlay
-                        .onAppear {
-                            withAnimation(.spring()) {
-                                animateSuccess = true
-                            }
-                            // через 1.5 секунды закрываем
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                                navigateBack()
-                            }
-                        }
-                }
+            if viewModel.showSuccess {
+                SuccessOverlay(
+                    message: viewModel.successMessage,
+                    animate: $animateSuccess,
+                    onComplete: {navigateBack()}
+                )
             }
+        }
         
     }
     
-    
-    private var successOverlay: some View {
-        ZStack {
-            Color.black.opacity(0.4)
-                .ignoresSafeArea()
-            
-            VStack(spacing: 20) {
-                Image(systemName: "checkmark.circle.fill")
-                    .font(.system(size: 80))
-                    .foregroundStyle(.green)
-                
-                Text(
-                    viewModel.isEditing ? "Трата добавлена!" : "Трата обновлена!"
-                )
-                    .font(.title2)
-                    .fontWeight(.bold)
-                    .foregroundStyle(.white)
-            }
-            .padding(30)
-            .background(
-                RoundedRectangle(cornerRadius: 20)
-                    .fill(Color(.systemBackground).opacity(0.8))
-            )
-            .scaleEffect(animateSuccess ? 1.0 : 0.5)
-            .opacity(animateSuccess ? 1.0 : 0)
-            .animation(.spring(), value: animateSuccess)
+    private func navigateBack() {
+        if let selectedTab {
+            selectedTab.wrappedValue = 0
+        } else {
+            dismiss()
         }
     }
     
-    private func navigateBack() {
-           if let selectedTab {
-               selectedTab.wrappedValue = 0
-           } else {
-               dismiss()
-           }
-       }
-    
-   }
-    
-   
+}
+
+
 
 #Preview {
     NavigationStack {
